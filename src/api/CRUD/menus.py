@@ -39,6 +39,7 @@ class CRUDMenu():
                     {'Menu ID': menu.id, 'Title': menu.title, 'Submenu Count': submenu_count, 'Dish Count': dish_count}
                 )
             return result
+        return []
 
     @staticmethod
     def create_menu(menu, session):
@@ -72,3 +73,4 @@ class CRUDMenu():
         if stmt.rowcount > 0:
             session.commit()
             return True
+        return []
