@@ -21,7 +21,7 @@ class Submenu(Base):
     description = Column(String, nullable=True, default='None')
     menu_id = Column(Integer, ForeignKey('menus.id', ondelete='CASCADE'))
     menu = relationship("Menu", back_populates="submenus")
-    __table_args__ = (UniqueConstraint('title', 'menu_id', name='uq_submenu_title_menu_id'),)
+    __table_args__ = (UniqueConstraint('menu_id', name='uq_submenu_title_menu_id'),)
 
 
 class Dish(Base):
