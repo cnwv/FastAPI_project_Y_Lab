@@ -43,7 +43,7 @@ def get_target_submenu(menu_id: int,
     if result:
         return result
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Submenu not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
 
 
 @router.patch("/{submenu_id}")
@@ -55,7 +55,7 @@ def update_target_menu(menu_id: int,
     if result:
         return result
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Submenu not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
 
 
 @router.delete("/{submenu_id}")
@@ -66,4 +66,4 @@ def delete_target_submenu(menu_id: int,
     if result:
         return f'Menu ID {submenu_id} deleted successfully.'
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Submenu not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")

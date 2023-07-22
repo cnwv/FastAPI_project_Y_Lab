@@ -8,7 +8,7 @@ router = APIRouter(
 
 @router.get("/")
 def get_dishes():
-    return
+    return ''
 
 
 @router.post("/")

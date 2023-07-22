@@ -39,7 +39,7 @@ def get_target_menu(menu_id: int,
     if result:
         return result
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Menu not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="menu not found")
 
 
 @router.patch("/{menu_id}")
@@ -57,4 +57,4 @@ def delete_target_menu(menu_id: int,
     if result:
         return f'Menu ID {menu_id} deleted successfully.'
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Menu not found.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="menu not found")

@@ -16,10 +16,10 @@ class CRUDSubmenu():
     @staticmethod
     def prepare_response(submenu, menu_id):
         response = dict()
-        response['id'] = submenu.id
+        response['id'] = str(submenu.id)
         response['title'] = str(submenu.title)
         response['description'] = str(submenu.description)
-        response['menu_id'] = int(menu_id)
+        response['menu_id'] = str(menu_id)
         return response
 
     @staticmethod
@@ -45,7 +45,7 @@ class CRUDSubmenu():
         stmt = insert(Submenu).values(menu_id=target_menu_id,
                                       title=submenu.title,
                                       description=submenu.description).returning(Submenu)
-        result = CRUDSubmenu.prepare_response(session.execute(stmt).scalar())
+        result = CRUDSubmenu.prepare_response(session.execute(stmt).scalar(), target_menu_id)
         session.commit()
         return result
 
@@ -54,7 +54,7 @@ class CRUDSubmenu():
         query = select(Submenu).where(Submenu.id == submenu_id, Submenu.menu_id == menu_id)
         result = session.execute(query).scalar()
         if result:
-            result = CRUDSubmenu.prepare_response(result)
+            result = CRUDSubmenu.prepare_response(result, menu_id)
             return result
         else:
             return []
