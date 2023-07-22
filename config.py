@@ -1,5 +1,9 @@
 from dotenv import load_dotenv
 import os
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+load_dotenv()
 
 
 class Database:
@@ -9,8 +13,18 @@ class Database:
         self.DB_NAME = os.environ.get("DB_NAME")
         self.DB_USER = os.environ.get("DB_USER")
         self.DB_PASS = os.environ.get("DB_PASS")
-        self.url = f"postgresql://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        self.url = f"postgresql+psycopg2://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 
-load_dotenv()
 db = Database()
+
+sync_engine = create_engine(db.url)
+sync_session_maker = sessionmaker(sync_engine)
+
+
+def get_sync_session():
+    with sync_session_maker() as session:
+        yield session
+
+
+
