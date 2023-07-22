@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 
-class MenusBody(BaseModel):
+class MenuBody(BaseModel):
     title: str
     description: str
 
@@ -25,7 +25,7 @@ def get_menus(session: Session = Depends(get_sync_session)):
 
 @router.post("/")
 def create_menu(response: Response,
-                menu: MenusBody,
+                menu: MenuBody,
                 session: Session = Depends(get_sync_session)):
     result = CRUDMenu.create_menu(menu, session)
     response.status_code = status.HTTP_201_CREATED
@@ -44,7 +44,7 @@ def get_target_menu(menu_id: int,
 
 @router.patch("/{menu_id}")
 def update_target_menu(menu_id: int,
-                       menu: MenusBody,
+                       menu: MenuBody,
                        session: Session = Depends(get_sync_session)):
     result = CRUDMenu.update_target_menu(menu_id, menu, session)
     return result

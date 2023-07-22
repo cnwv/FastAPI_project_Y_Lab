@@ -21,9 +21,7 @@ class SubmenuBody(BaseModel):
 def get_submenus(menu_id: int,
                  session: Session = Depends(get_sync_session)):
     result = CRUDSubmenu.get_submenus(menu_id, session)
-    if result:
-        return result
-    return []
+    return result if result else []
 
 
 @router.post("/")

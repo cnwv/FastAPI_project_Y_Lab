@@ -23,7 +23,7 @@ class CRUDSubmenu():
         return response
 
     @staticmethod
-    def get_submenu_and_dish_count(submenu_id, session):
+    def get_dish_count(submenu_id, session):
         dish_count = session.query(func.count(Dish.id)).join(Submenu).filter(Submenu.id == submenu_id).scalar()
         return dish_count
 
@@ -33,7 +33,7 @@ class CRUDSubmenu():
         submenus = session.query(Submenu).where(Submenu.menu_id == menu_id).all()
         if submenus:
             for submenu in submenus:
-                dish_count = CRUDSubmenu.get_submenu_and_dish_count(submenu.id, session)
+                dish_count = CRUDSubmenu.get_dish_count(submenu.id, session)
                 result['Submenus'].append(
                     {'Submenu ID': submenu.id, 'Title': submenu.title, 'Dish Count': dish_count}
                 )
@@ -77,5 +77,5 @@ class CRUDSubmenu():
                                                      Submenu.menu_id == menu_id))
         if stmt.rowcount > 0:
             session.commit()
-            return True
+            return f'Dish ID {submenu_id} deleted successfully.'
         return False
