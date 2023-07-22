@@ -1,5 +1,5 @@
-from sqlalchemy import select, insert, update, delete
-from .schemas import Menu
+from sqlalchemy import select, insert, update, delete, func
+from .schemas import Menu, Submenu, Dish
 from pydantic import BaseModel
 
 
@@ -23,12 +23,22 @@ class CRUDMenu():
         return response
 
     @staticmethod
+    def get_submenu_and_dish_count(menu_id, session):
+        submenu_count = session.query(func.count(Submenu.id)).filter(Submenu.menu_id == menu_id).scalar()
+        dish_count = session.query(func.count(Dish.id)).join(Submenu).filter(Submenu.menu_id == menu_id).scalar()
+        return submenu_count, dish_count
+
+    @staticmethod
     def get_menus(session):
-        query = select(Menu.title)
-        result = session.execute(query).all()
-        if result:
-            return {'result': f'{result}'}
-        return False
+        result = {'result': []}
+        menus = session.query(Menu).all()
+        if menus:
+            for menu in menus:
+                submenu_count, dish_count = CRUDMenu.get_submenu_and_dish_count(menu.id, session)
+                result['result'].append(
+                    {'Menu ID': menu.id, 'Title': menu.title, 'Submenu Count': submenu_count, 'Dish Count': dish_count}
+                )
+            return result
 
     @staticmethod
     def create_menu(menu, session):
