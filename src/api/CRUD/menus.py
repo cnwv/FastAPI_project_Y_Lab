@@ -8,11 +8,8 @@ class MenuModel(BaseModel):
     title: str
     description: str
 
-    class Config:
-        orm_mode = True
 
-
-class CRUDMenu():
+class CRUDMenu:
 
     @staticmethod
     def prepare_response(menu):

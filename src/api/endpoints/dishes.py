@@ -3,7 +3,7 @@ from src.api.CRUD.dishes import CRUDDish
 from config import get_sync_session
 from sqlalchemy.orm import Session
 from fastapi import Depends, Response, status
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi import HTTPException
 
 router = APIRouter(
@@ -15,7 +15,7 @@ router = APIRouter(
 class BodyDish(BaseModel):
     title: str
     description: str
-    price: float # TODO сделать проверку больше нуля
+    price: float = Field(ge=0)
 
 
 @router.get("/")
@@ -24,7 +24,6 @@ def get_dishes(menu_id: int,
                session: Session = Depends(get_sync_session)):
     result = CRUDDish.get_dishes(menu_id, submenu_id, session)
     return result
-    # TODO добавить проверку по меню
 
 
 @router.post("/")

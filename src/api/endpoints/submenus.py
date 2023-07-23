@@ -29,8 +29,10 @@ def create_submenu(response: Response,
                    menu_id: int, submenu: SubmenuBody,
                    session: Session = Depends(get_sync_session)):
     result = CRUDSubmenu.create_submenu(menu_id, submenu, session)
-    response.status_code = status.HTTP_201_CREATED
-    return result
+    if result:
+        response.status_code = status.HTTP_201_CREATED
+        return result
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="a menu with that title already exists")
 
 
 @router.get("/{submenu_id}")
@@ -40,8 +42,7 @@ def get_target_submenu(menu_id: int,
     result = CRUDSubmenu.get_target_submenu(menu_id, submenu_id, session)
     if result:
         return result
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
 
 
 @router.patch("/{submenu_id}")
@@ -52,8 +53,7 @@ def update_target_menu(menu_id: int,
     result = CRUDSubmenu.update_target_submenu(menu_id, submenu_id, submenu, session)
     if result:
         return result
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
 
 
 @router.delete("/{submenu_id}")
@@ -63,5 +63,4 @@ def delete_target_submenu(menu_id: int,
     result = CRUDSubmenu.delete_target_submenu(menu_id, submenu_id, session)
     if result:
         return f'Menu ID {submenu_id} deleted successfully.'
-    else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="submenu not found")

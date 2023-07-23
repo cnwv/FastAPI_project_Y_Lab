@@ -1,8 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, DECIMAL, UniqueConstraint, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+metadata = MetaData()
+Base = declarative_base(metadata=metadata)
 
 
 class Menu(Base):

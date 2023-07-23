@@ -1,6 +1,7 @@
 from sqlalchemy import select, insert, update, delete, func
 from .schemas import Submenu, Dish
 from pydantic import BaseModel
+from sqlalchemy.exc import IntegrityError
 
 
 class SubmenuModel(BaseModel):
@@ -8,11 +9,8 @@ class SubmenuModel(BaseModel):
     title: str
     description: str
 
-    class Config:
-        orm_mode = True
 
-
-class CRUDSubmenu():
+class CRUDSubmenu:
     @staticmethod
     def get_menu_json(submenu, session):
         dish_count = session.query(func.count(Dish.id)).join(Submenu).filter(Submenu.id == submenu.id).scalar()
@@ -34,16 +32,19 @@ class CRUDSubmenu():
         return []
 
     @staticmethod
-    def create_submenu(target_menu_id, submenu, session):# TODO при одинаковом титуле возращает 500. Исправить psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "uq_submenu_title_menu_id"
+    def create_submenu(target_menu_id, submenu,
+                       session):  # TODO при одинаковом титуле возращает 500. Исправить psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "uq_submenu_title_menu_id"
 
         stmt = insert(Submenu).values(menu_id=target_menu_id,
                                       title=submenu.title,
                                       description=submenu.description).returning(Submenu)
-        result = CRUDSubmenu.get_menu_json(session.execute(stmt).scalar(), session)
-        if result:
+        try:
+            result = CRUDSubmenu.get_menu_json(session.execute(stmt).scalar(), session)
             session.commit()
             return result
-        return False
+        except IntegrityError as e:
+            print(f'Error: {e.orig}')
+            return False
 
     @staticmethod
     def get_target_submenu(menu_id, submenu_id, session):
