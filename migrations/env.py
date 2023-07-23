@@ -5,13 +5,9 @@ from sqlalchemy import pool
 
 from alembic import context
 
-import os
-import sys
-
-sys.path.append(os.path.join(sys.path[0], 'src'))
 
 from config import db
-from menus.models import metadata as metadata_menus
+from src.api.CRUD.schemas import metadata as metadata_menus
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

@@ -33,7 +33,7 @@ class CRUDSubmenu:
 
     @staticmethod
     def create_submenu(target_menu_id, submenu,
-                       session):  # TODO при одинаковом титуле возращает 500. Исправить psycopg2.errors.UniqueViolation: duplicate key value violates unique constraint "uq_submenu_title_menu_id"
+                       session):
 
         stmt = insert(Submenu).values(menu_id=target_menu_id,
                                       title=submenu.title,
