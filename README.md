@@ -1,17 +1,38 @@
-Написать проект на FastAPI с использованием PostgreSQL в качестве БД.
+# Y_Lab FastAPI project
 
-В проекте следует реализовать REST API по работе с меню ресторана, все CRUD операции. Для проверки задания, к презентаций будет приложена Postman коллекция с тестами. Задание выполнено, если все тесты проходят успешно. Даны 3 сущности: Меню, Подменю, Блюдо.
+[![python](https://img.shields.io/badge/python-3.9-blue?style=flat-square)](https://www.python.org/)
+[![fastapi](https://img.shields.io/badge/fastapi-0.100.0-critical?style=flat-square)](https://fastapi.tiangolo.com/)
 
-Зависимости:
-У меню есть подменю, которые к ней привязаны.
-У подменю есть блюда.
-Условия:
-Блюдо не может быть привязано напрямую к меню, минуя подменю.
-Блюдо не может находиться в 2-х подменю одновременно.
-Подменю не может находиться в 2-х меню одновременно.
-Если удалить меню, должны удалиться все подменю и блюда этого меню.
-Если удалить подменю, должны удалиться все блюда этого подменю.
-Цены блюд выводить с округлением до 2 знаков после запятой.
-Во время выдачи списка меню, для каждого меню добавлять кол-во подменю и блюд в этом меню.
-Во время выдачи списка подменю, для каждого подменю добавлять кол-во блюд в этом подменю.
-Во время запуска тестового сценария БД должна быть пуста.
+
+## Description:
+
+FastAPI educational project for Y_Lab. This is a backend service for restaurants with CRUD menu operations. There are three entities: Menu, Submenu, Dishes.
+The documentation can be found at (http://0.0.0.0:8000/docs,
+http://localhost:8000/docs or http://127.0.0.1:8000/docs) 
+
+
+## Based on:
+- Python 3.9
+- FastAPI 0.89.1
+- SQLAlchemy 2.0.19
+- Alembic 1.11.1
+- Gunicorn 21.2.0
+- PostgreSQL 15.1-alpine
+
+
+## How to use it
+
+```shell
+git clone https://github.com/cnwv/FastAPI_project_Y_Lab.git
+
+cd FastAPI_project_Y_Lab
+
+docker-compose sudo docker-compose up --build
+```
+
+## How to test it
+
+Upload the menu app.postman_environment.json and menu app.postman_collection.json files from the /tests/postman folder to postman and run the test.
+
+
+
