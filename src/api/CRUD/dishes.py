@@ -5,7 +5,6 @@ from sqlalchemy.exc import IntegrityError
 from dataclasses import dataclass
 
 
-@dataclass
 class CRUDDish:
 
     @staticmethod
@@ -14,11 +13,6 @@ class CRUDDish:
         if session.execute(exists_query).scalar():
             return True
         return False
-
-    @staticmethod
-    def get_dish_count(submenu_id, session):
-        dish_count = session.query(func.count(Dish.id)).join(Submenu).filter(Submenu.id == submenu_id).scalar()
-        return dish_count
 
     @staticmethod
     def prepare_response(dish):
@@ -38,10 +32,7 @@ class CRUDDish:
         dishes = session.query(Dish).where(Dish.submenu_id == submenu_id).all()
         if dishes:
             for dish in dishes:
-                dish_count = CRUDDish.get_dish_count(submenu_id, session)
-                result['Dishes'].append(
-                    {'Dish ID': dish.id, 'Title': dish.title, 'Price': dish.price, 'Dish Count': dish_count}
-                )
+                result['Dishes'].append(CRUDDish.prepare_response(dish))
             return result
         return []
 
@@ -55,9 +46,9 @@ class CRUDDish:
                                    description=dish.description,
                                    price=dish.price).returning(Dish)
         try:
-            result = session.execute(stmt).scalar()
+            dish = session.execute(stmt).scalar()
             session.commit()
-            result = CRUDDish.prepare_response(result)
+            result = CRUDDish.prepare_response(dish)
             return result
         except IntegrityError as e:
             print(f'Error: {e.orig}')
@@ -71,10 +62,10 @@ class CRUDDish:
         stmt = session.execute(update(Dish).where(Dish.id == dish_id,
                                                   Dish.submenu_id == submenu_id).values(**dish.dict()).returning(
             Dish))
-        updated_row = stmt.scalar()
-        if updated_row:
+        updated_dish = stmt.scalar()
+        if updated_dish:
             session.commit()
-            result = CRUDDish.prepare_response(updated_row)
+            result = CRUDDish.prepare_response(updated_dish)
             return result
         return False
 
@@ -95,9 +86,9 @@ class CRUDDish:
         if not is_exist:
             return False
         query = select(Dish).where(Dish.id == dish_id)
-        result = session.execute(query).scalar()
-        if result:
-            result = CRUDDish.prepare_response(result)
+        dish = session.execute(query).scalar()
+        if dish:
+            result = CRUDDish.prepare_response(dish)
             return result
         else:
             return []

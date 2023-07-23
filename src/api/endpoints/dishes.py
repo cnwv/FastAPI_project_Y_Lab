@@ -15,7 +15,7 @@ router = APIRouter(
 class BodyDish(BaseModel):
     title: str
     description: str
-    price: float
+    price: float # TODO сделать проверку больше нуля
 
 
 @router.get("/")

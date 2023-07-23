@@ -23,10 +23,15 @@ class CRUDMenu():
         return response
 
     @staticmethod
-    def get_submenu_and_dish_count(menu_id, session):
-        submenu_count = session.query(func.count(Submenu.id)).filter(Submenu.menu_id == menu_id).scalar()
-        dish_count = session.query(func.count(Dish.id)).join(Submenu).filter(Submenu.menu_id == menu_id).scalar()
-        return submenu_count, dish_count
+    def get_menu_json(menu, session):
+        submenu_count = session.query(func.count(Submenu.id)).filter(Submenu.menu_id == menu.id).scalar()
+        dish_count = session.query(func.count(Dish.id)).join(Submenu).filter(Submenu.menu_id == menu.id).scalar()
+        result = {'id': str(menu.id),
+                  'title': menu.title,
+                  'description': menu.description,
+                  'submenus_count': submenu_count,
+                  'dishes_count': dish_count}
+        return result
 
     @staticmethod
     def get_menus(session):
@@ -34,17 +39,15 @@ class CRUDMenu():
         menus = session.query(Menu).all()
         if menus:
             for menu in menus:
-                submenu_count, dish_count = CRUDMenu.get_submenu_and_dish_count(menu.id, session)
-                result['result'].append(
-                    {'Menu ID': menu.id, 'Title': menu.title, 'Submenu Count': submenu_count, 'Dish Count': dish_count}
-                )
+                menu_json = CRUDMenu.get_menu_json(menu, session)
+                result['result'].append(menu_json)
             return result
         return []
 
     @staticmethod
     def create_menu(menu, session):
         stmt = insert(Menu).values(title=menu.title, description=menu.description).returning(Menu)
-        result = CRUDMenu.prepare_response(session.execute(stmt).scalar())
+        result = CRUDMenu.get_menu_json(session.execute(stmt).scalar(), session)
         session.commit()
         return result
 
@@ -53,7 +56,7 @@ class CRUDMenu():
         query = select(Menu).where(Menu.id == menu_id)
         result = session.execute(query).scalar()
         if result:
-            result = CRUDMenu.prepare_response(result)
+            result = CRUDMenu.get_menu_json(result, session)
             return result
         else:
             return False
