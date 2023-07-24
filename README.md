@@ -27,7 +27,7 @@ git clone https://github.com/cnwv/FastAPI_project_Y_Lab.git
 
 cd FastAPI_project_Y_Lab
 
-docker-compose sudo docker-compose up --build
+sudo docker-compose up --build
 ```
 
 ## How to test it
