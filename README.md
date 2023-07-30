@@ -32,7 +32,7 @@ sudo docker-compose up --build
 
 ## How to test it 
 ### Pytest
-docker-compose -f docker-compose.test.yml up -d --build
+docker-compose -f docker-compose.test.yml up -d --build &&
 docker-compose -f docker-compose.test.yml run --rm app pytest -vv
 
 ### Postman
