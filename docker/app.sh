@@ -1,5 +1,4 @@
 #!/bin/bash
-echo test
 
 alembic upgrade head
 

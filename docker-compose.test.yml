@@ -15,8 +15,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-
   app:
     build:
       context: .
@@ -30,3 +28,16 @@ services:
       db:
         condition: service_healthy
     restart: always
+
+  pytest:
+    build:
+      context: .
+    command: >
+      /bin/bash -c "
+      pytest -vv
+      "
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
