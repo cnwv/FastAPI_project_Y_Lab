@@ -1,15 +1,20 @@
-from sqlalchemy import select, insert, update, delete, func, exists
-from .schemas import Dish, Submenu
+from sqlalchemy import delete
+from sqlalchemy import exists
+from sqlalchemy import insert
+from sqlalchemy import select
+from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
 
-from dataclasses import dataclass
+from .schemas import Dish
+from .schemas import Submenu
 
 
 class CRUDDish:
-
     @staticmethod
     def check_menu(menu_id, submenu_id, session):
-        exists_query = select(exists().where(Submenu.id == submenu_id).where(Submenu.menu_id == menu_id))
+        exists_query = select(
+            exists().where(Submenu.id == submenu_id).where(Submenu.menu_id == menu_id)
+        )
         if session.execute(exists_query).scalar():
             return True
         return False
@@ -17,10 +22,10 @@ class CRUDDish:
     @staticmethod
     def prepare_response(dish):
         response = dict()
-        response['id'] = str(dish.id)
-        response['title'] = str(dish.title)
-        response['description'] = str(dish.description)
-        response['price'] = str(dish.price)
+        response["id"] = str(dish.id)
+        response["title"] = str(dish.title)
+        response["description"] = str(dish.description)
+        response["price"] = str(dish.price)
         return response
 
     @staticmethod
@@ -28,11 +33,11 @@ class CRUDDish:
         is_exist = CRUDDish.check_menu(menu_id, submenu_id, session)
         if not is_exist:
             return []
-        result = {'Dishes': []}
+        result = {"Dishes": []}
         dishes = session.query(Dish).where(Dish.submenu_id == submenu_id).all()
         if dishes:
             for dish in dishes:
-                result['Dishes'].append(CRUDDish.prepare_response(dish))
+                result["Dishes"].append(CRUDDish.prepare_response(dish))
             return result
         return []
 
@@ -41,17 +46,23 @@ class CRUDDish:
         is_exist = CRUDDish.check_menu(menu_id, submenu__id, session)
         if not is_exist:
             return False
-        stmt = insert(Dish).values(submenu_id=submenu__id,
-                                   title=dish.title,
-                                   description=dish.description,
-                                   price=dish.price).returning(Dish)
+        stmt = (
+            insert(Dish)
+            .values(
+                submenu_id=submenu__id,
+                title=dish.title,
+                description=dish.description,
+                price=dish.price,
+            )
+            .returning(Dish)
+        )
         try:
             dish = session.execute(stmt).scalar()
             session.commit()
             result = CRUDDish.prepare_response(dish)
             return result
         except IntegrityError as e:
-            print(f'Error: {e.orig}')
+            print(f"Error: {e.orig}")
             return []
 
     @staticmethod
@@ -59,9 +70,12 @@ class CRUDDish:
         is_exist = CRUDDish.check_menu(menu_id, submenu_id, session)
         if not is_exist:
             return False
-        stmt = session.execute(update(Dish).where(Dish.id == dish_id,
-                                                  Dish.submenu_id == submenu_id).values(**dish.dict()).returning(
-            Dish))
+        stmt = session.execute(
+            update(Dish)
+            .where(Dish.id == dish_id, Dish.submenu_id == submenu_id)
+            .values(**dish.dict())
+            .returning(Dish)
+        )
         updated_dish = stmt.scalar()
         if updated_dish:
             session.commit()
