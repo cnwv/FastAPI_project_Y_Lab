@@ -33,10 +33,8 @@ sudo docker-compose up --build
 ## How to test it 
 ### Pytest
 ```shell
-docker-compose -f docker-compose.test.yml up -d --build &&
-docker-compose -f docker-compose.test.yml run --rm app pytest -vv
+docker-compose -f docker-compose.test.yml up --build
 ```
-
 
 ### Postman
 Upload the menu app.postman_environment.json and menu app.postman_collection.json files from the /tests/postman folder to postman and run the test.
