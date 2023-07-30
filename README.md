@@ -30,9 +30,11 @@ cd FastAPI_project_Y_Lab
 sudo docker-compose up --build
 ```
 
-## How to test it
+## How to test it 
+### Pytest
+docker-compose -f docker-compose.test.yml up -d --build
+docker-compose -f docker-compose.test.yml run --rm app pytest -vv
 
+### Postman
 Upload the menu app.postman_environment.json and menu app.postman_collection.json files from the /tests/postman folder to postman and run the test.
-
-
 

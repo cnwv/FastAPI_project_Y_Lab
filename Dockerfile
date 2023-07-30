@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM python:3.10-slim
 
 RUN apt-get update && apt-get install -y python3 python3-pip
 
@@ -8,7 +8,7 @@ WORKDIR /fastapi_app
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
 
 COPY . .
 

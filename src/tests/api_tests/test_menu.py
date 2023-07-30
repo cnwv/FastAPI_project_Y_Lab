@@ -3,7 +3,7 @@ import pytest
 
 
 class TestMenu:
-    menu_id = ''
+    menu_id = None
 
     def test_read_menus(self, client):
         response = client.get('/api/v1/menus')

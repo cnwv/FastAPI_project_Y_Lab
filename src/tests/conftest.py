@@ -8,8 +8,7 @@ from main import app
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_db():
-    print('ей')
-    assert db.DB_NAME == 'postgres_test'
+    assert db.DB_NAME == 'postgres-test'
     metadata.drop_all(sync_engine)
     metadata.create_all(sync_engine)
 
