@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: postgres
     container_name: db-postgres
     ports:
-      - 5430:5432
+      - 5435:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 10s
