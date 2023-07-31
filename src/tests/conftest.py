@@ -9,7 +9,7 @@ from src.api.CRUD.schemas import metadata
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_db():
-    assert db.DB_NAME == "postgres-test"
+    assert db.DB_NAME == "test"
     metadata.drop_all(sync_engine)
     metadata.create_all(sync_engine)
 
