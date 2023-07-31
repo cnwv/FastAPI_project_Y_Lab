@@ -2,7 +2,7 @@
 
 [![python](https://img.shields.io/badge/python-3.9-blue?style=flat-square)](https://www.python.org/)
 [![fastapi](https://img.shields.io/badge/fastapi-0.100.0-critical?style=flat-square)](https://fastapi.tiangolo.com/)
-[![pytest](https://img.shields.io/badge/fastapi-0.100.0-critical?style=flat-square)](https://fastapi.tiangolo.com/)
+[![pytest](https://img.shields.io/badge/pytest-passed-brightgreen)](https://docs.pytest.org/en/7.4.x/)
 
 
 ## Description:
@@ -28,13 +28,13 @@ git clone https://github.com/cnwv/FastAPI_project_Y_Lab.git
 
 cd FastAPI_project_Y_Lab
 
-sudo docker-compose up -d
+docker-compose up -d
 ```
 
 ## How to test it
 ### Pytest
 ```shell
-sudo docker-compose up -d
+docker-compose up -d
 docker exec -it fastapi_app pytest -v
 ```
 
