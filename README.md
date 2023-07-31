@@ -1,6 +1,6 @@
 # Y_Lab FastAPI project
 
-[![python](https://img.shields.io/badge/python-3.9-blue?style=flat-square)](https://www.python.org/)
+[![python](https://img.shields.io/badge/python-3.10_slim-blue?style=flat-square)](https://www.python.org/)
 [![fastapi](https://img.shields.io/badge/fastapi-0.100.0-critical?style=flat-square)](https://fastapi.tiangolo.com/)
 [![pytest](https://img.shields.io/badge/pytest-passed-brightgreen)](https://docs.pytest.org/en/7.4.x/)
 
@@ -13,7 +13,7 @@ http://localhost:8000/docs or http://127.0.0.1:8000/docs)
 
 
 ## Based on:
-- Python 3.9
+- Python 3.10-slim
 - FastAPI 0.89.1
 - SQLAlchemy 2.0.19
 - Alembic 1.11.1
