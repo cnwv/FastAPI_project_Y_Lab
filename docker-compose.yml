@@ -29,3 +29,14 @@ services:
       db:
         condition: service_healthy
     restart: always
+
+  tests:
+    build:
+      context: .
+    container_name: tests
+    depends_on:
+      db:
+        condition: service_healthy
+      app:
+        condition: service_started
+    command: ["/fastapi_app/docker/run_tests.sh"]
