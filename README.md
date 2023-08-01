@@ -35,7 +35,7 @@ docker-compose up -d
 ### Pytest
 ```shell
 docker-compose up -d
-docker exec -it fastapi_app pytest -v
+docker-compose up tests
 ```
 
 ### Postman
