@@ -1,13 +1,7 @@
 from pydantic import BaseModel
-from sqlalchemy import delete
-from sqlalchemy import func
-from sqlalchemy import insert
-from sqlalchemy import select
-from sqlalchemy import update
+from sqlalchemy import delete, func, insert, select, update
 
-from .schemas import Dish
-from .schemas import Menu
-from .schemas import Submenu
+from src.api.models import Dish, Menu, Submenu
 
 
 class MenuModel(BaseModel):
@@ -16,13 +10,13 @@ class MenuModel(BaseModel):
     description: str
 
 
-class CRUDMenu:
+class MenuService:
     @staticmethod
     def prepare_response(menu):
         response = dict()
-        response["id"] = str(menu.id)
-        response["title"] = str(menu.title)
-        response["description"] = str(menu.description)
+        response['id'] = str(menu.id)
+        response['title'] = str(menu.title)
+        response['description'] = str(menu.description)
         return response
 
     @staticmethod
@@ -39,22 +33,22 @@ class CRUDMenu:
             .scalar()
         )
         result = {
-            "id": str(menu.id),
-            "title": menu.title,
-            "description": menu.description,
-            "submenus_count": submenu_count,
-            "dishes_count": dish_count,
+            'id': str(menu.id),
+            'title': menu.title,
+            'description': menu.description,
+            'submenus_count': submenu_count,
+            'dishes_count': dish_count,
         }
         return result
 
     @staticmethod
     def get_menus(session):
-        result = {"result": []}
+        result = {'result': []}
         menus = session.query(Menu).all()
         if menus:
             for menu in menus:
-                menu_json = CRUDMenu.get_menu_json(menu, session)
-                result["result"].append(menu_json)
+                menu_json = MenuService.get_menu_json(menu, session)
+                result['result'].append(menu_json)
             return result
         return []
 
@@ -65,7 +59,7 @@ class CRUDMenu:
             .values(title=menu.title, description=menu.description)
             .returning(Menu)
         )
-        result = CRUDMenu.get_menu_json(session.execute(stmt).scalar(), session)
+        result = MenuService.get_menu_json(session.execute(stmt).scalar(), session)
         session.commit()
         return result
 
@@ -74,7 +68,7 @@ class CRUDMenu:
         query = select(Menu).where(Menu.id == menu_id)
         result = session.execute(query).scalar()
         if result:
-            result = CRUDMenu.get_menu_json(result, session)
+            result = MenuService.get_menu_json(result, session)
             return result
         else:
             return False
@@ -87,7 +81,7 @@ class CRUDMenu:
         updated_row = stmt.scalar()
         if updated_row:
             session.commit()
-            result = CRUDMenu.prepare_response(updated_row)
+            result = MenuService.prepare_response(updated_row)
             return result
 
     @staticmethod

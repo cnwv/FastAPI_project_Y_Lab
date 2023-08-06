@@ -1,13 +1,8 @@
 from pydantic import BaseModel
-from sqlalchemy import delete
-from sqlalchemy import func
-from sqlalchemy import insert
-from sqlalchemy import select
-from sqlalchemy import update
+from sqlalchemy import delete, func, insert, select, update
 from sqlalchemy.exc import IntegrityError
 
-from .schemas import Dish
-from .schemas import Submenu
+from src.api.models import Dish, Submenu
 
 
 class SubmenuModel(BaseModel):
@@ -16,7 +11,7 @@ class SubmenuModel(BaseModel):
     description: str
 
 
-class CRUDSubmenu:
+class SubmenuService:
     @staticmethod
     def get_menu_json(submenu, session):
         dish_count = (
@@ -26,21 +21,21 @@ class CRUDSubmenu:
             .scalar()
         )
         result = {
-            "id": str(submenu.id),
-            "title": submenu.title,
-            "description": submenu.description,
-            "dishes_count": dish_count,
+            'id': str(submenu.id),
+            'title': submenu.title,
+            'description': submenu.description,
+            'dishes_count': dish_count,
         }
         return result
 
     @staticmethod
     def get_submenus(menu_id, session):
-        result = {"Submenus": []}
+        result = {'Submenus': []}
         submenus = session.query(Submenu).where(Submenu.menu_id == menu_id).all()
         if submenus:
             for submenu in submenus:
-                submenu_json = CRUDSubmenu.get_menu_json(submenu, session)
-                result["Submenus"].append(submenu_json)
+                submenu_json = SubmenuService.get_menu_json(submenu, session)
+                result['Submenus'].append(submenu_json)
             return result
         return []
 
@@ -57,11 +52,11 @@ class CRUDSubmenu:
             .returning(Submenu)
         )
         try:
-            result = CRUDSubmenu.get_menu_json(session.execute(stmt).scalar(), session)
+            result = SubmenuService.get_menu_json(session.execute(stmt).scalar(), session)
             session.commit()
             return result
         except IntegrityError as e:
-            print(f"Error: {e.orig}")
+            print(f'Error: {e.orig}')
             return False
 
     @staticmethod
@@ -71,7 +66,7 @@ class CRUDSubmenu:
         )
         result = session.execute(query).scalar()
         if result:
-            result = CRUDSubmenu.get_menu_json(result, session)
+            result = SubmenuService.get_menu_json(result, session)
             return result
         else:
             return []
@@ -87,7 +82,7 @@ class CRUDSubmenu:
         updated_row = stmt.scalar()
         if updated_row:
             session.commit()
-            result = CRUDSubmenu.get_menu_json(updated_row, session)
+            result = SubmenuService.get_menu_json(updated_row, session)
             return result
         return []
 
@@ -98,5 +93,5 @@ class CRUDSubmenu:
         )
         if stmt.rowcount > 0:
             session.commit()
-            return f"Dish ID {submenu_id} deleted successfully."
+            return f'Dish ID {submenu_id} deleted successfully.'
         return False
